@@ -1,0 +1,118 @@
+
+#import packages
+import pandas as pd
+import numpy as np
+import matplotlib as plt
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+#import the data
+data = pd.read_csv("C:\Spyder\salaries.csv")
+
+
+
+#Clean data (drop columns with no full data)
+data = data.dropna()
+
+########finding job title of that in the data
+job_title = data["title"].value_counts()[0:10]
+job_title.columns = ["Job", "Count"]
+
+#Creating a plot of the data
+job_title.plot.bar()
+plt.title("Bar chart showing distribution of job title in data")
+
+
+#segmenting data to only that of software engineer
+data = data[data['title'] == 'Software Engineer']
+
+#Removing columns that are not relevant and job title
+data = data.drop(['level','timestamp','tag','cityid','dmaid','rowNumber','title','basesalary'], axis=1)
+data = data.drop(['Masters_Degree','Bachelors_Degree','Doctorate_Degree','Highschool','Some_College','Race_Asian','Race_White','Race_Two_Or_More','Race_Black','Race_Hispanic','otherdetails'],axis=1)
+
+#### Years of experience form that within the data
+years_experience = data['yearsofexperience']
+
+
+
+plt.xlabel("Entries")
+plt.ylabel('Years of Experience')
+plt.title("Years of Experience-Boxplot")
+years_experience.describe()
+
+##### Years at company
+
+years_company = data['yearsatcompany']
+
+
+plt.xlabel("Entries")
+plt.ylabel("Years at company")
+plt.title("Years at Company-Boxplot")
+years_company.describe()
+
+plt.boxplot(years_company)
+plt.boxplot(years_experience)
+
+
+########### Finding Gender within data
+data['gender']
+
+
+gender = data["gender"].value_counts()[0:10]
+gender.cumsum()
+
+gender.plot.bar()
+plt.title("Bar chart showing gender distribution of the dataset")
+
+gender.plot.pie(autopct='%1.1f%%',)
+plt.title("Pie chart showing the gender imbalance of the dataset")
+
+######## Finding Black Women in dataset #####
+
+bw = data[data['gender'] == 'Female']
+bw = bw[bw['Race'] =='Black']
+bw_1 = bw.value_counts()
+
+groupby_gender = data['gender'].groupby(data['Race'])
+groupby_gender.describe()
+
+############### Finding race spread from within dataset
+race = data["Race"].value_counts()[0:10]
+
+race.plot.bar()
+plt.title("Bar chart showing distribution of race")
+plt.xlabel("Race")
+plt.ylabel("Number of entries")
+
+############### Finding Education
+educ = data["Education"].value_counts()[0:6]
+
+educ.plt.bar()
+plt.title("Bar chart showing education of entries")
+
+############  Finding Location
+location = data["location"].value_counts()[0:11]
+
+location.plot.pie()
+plt.title("Pie Chart showing lcoation of entries")
+
+
+######### Finding relationship between basesalary, gender and education
+
+sns.catplot(x="gender", y="basesalary", hue="Education", kind="bar", data=data)
+
+sns.catplot(x='gender',y='totalyearlycompensation',hue='Race', kind='bar', data=data)
+
+############ 
+
+sns.catplot(x='gender', y='basesalary', hue='Race', kind='bar', data=data)
+
+#From this we can see that those with a white background are earning more than those from other races
+
+
+########## Finding Company ######
+import pylab
+company= data['company'].value_counts()[0:15]
+company.cumsum()
+company.plot.pie()
+pylab.ylabel(" ")
